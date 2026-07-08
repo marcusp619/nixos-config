@@ -20,10 +20,11 @@
 
   outputs = { self, nixpkgs, home-manager, nix-darwin, ... }@inputs:
   let
-    username = "mark";
+    personalUser = "mark";
+    workUser     = "mpearyer"; # corp-managed account name on the work MacBook
 
     # Build a home-manager NixOS/Darwin inline module from a list of home modules.
-    mkHmCfg = modules: {
+    mkHmCfg = username: modules: {
       home-manager.useGlobalPkgs    = true;
       home-manager.useUserPackages  = true;
       home-manager.extraSpecialArgs = { inherit inputs username; };
@@ -34,14 +35,14 @@
     # ── AMD desktop (NixOS, x86_64) ──────────────────────────────────────────
     nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = { inherit inputs username; };
+      specialArgs = { inherit inputs; username = personalUser; };
       modules = [
         ./hosts/desktop/configuration.nix
         home-manager.nixosModules.home-manager
-        (mkHmCfg [
+        (mkHmCfg personalUser [
           ./home/common.nix
           ./home/personal-apps.nix
-          ./home/desktop.nix
+          ./home/desktop-apps.nix
         ])
       ];
     };
@@ -49,11 +50,11 @@
     # ── MacBook Pro 2017 running NixOS (x86_64) ───────────────────────────────
     nixosConfigurations.personal-macbook = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = { inherit inputs username; };
+      specialArgs = { inherit inputs; username = personalUser; };
       modules = [
         ./hosts/personal-macbook/configuration.nix
         home-manager.nixosModules.home-manager
-        (mkHmCfg [
+        (mkHmCfg personalUser [
           ./home/common.nix
           ./home/personal-apps.nix
         ])
@@ -63,12 +64,13 @@
     # ── Work MacBook (macOS, nix-darwin) ──────────────────────────────────────
     darwinConfigurations.work-macbook = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
-      specialArgs = { inherit inputs username; };
+      specialArgs = { inherit inputs; username = workUser; };
       modules = [
         ./hosts/work-macbook/darwin.nix
         home-manager.darwinModules.home-manager
-        (mkHmCfg [
+        (mkHmCfg workUser [
           ./home/common.nix
+          ./home/work-apps.nix
         ])
       ];
     };

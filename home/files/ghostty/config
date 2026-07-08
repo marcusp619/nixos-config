@@ -1,0 +1,15 @@
+# Modern Dev Setup — Ghostty
+
+
+font-family = "JetBrainsMono Nerd Font"
+font-size = 14
+
+cursor-style = block
+
+window-padding-x = 14
+window-padding-y = 12
+background-opacity = 0.97
+macos-titlebar-style = transparent
+
+scrollback-limit = 200000
+copy-on-select = false

@@ -1,31 +1,51 @@
 { config, pkgs, username, ... }:
 {
-  # Placeholder for the Mac — we'll flesh this out after the desktop is up.
+  users.users.${username}.home = "/Users/${username}";
+  system.primaryUser = username;
 
-  environment.systemPackages = [ pkgs.vim ];
+  nixpkgs.config.allowUnfree = true;
 
-  # macOS GUI apps go through Homebrew casks (via the nix-homebrew module) or `mas`
-  # for App Store apps. Wire this up later:
-  # homebrew = {
-  #   enable = true;
-  #   casks = [ "raycast" "rectangle" ];
-  # };
+  # Upstream Nix installed with NIX_VOLUME_CREATE=0 + synthetic.conf symlink
+  # (/nix -> /System/Volumes/Data/nix) because Kandji MDM blocks the Nix Store
+  # volume mount. If that ever changes to Determinate Nix, set nix.enable = false.
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.trusted-users = [ "root" username ];
 
-  # A couple of sane macOS defaults to show the pattern — expand to taste.
+  fonts.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
+
+  # GUI apps via Homebrew casks — more reliable than nixpkgs for mac apps.
+  # NOT listed (IT/MDM owns them — never manage): BeyondTrust, Cisco, CrowdStrike
+  # Falcon, GlobalProtect, Okta Verify, Iru, PrivilegeManagement, SquareX,
+  # uniFLOW, Microsoft Office/Teams/Outlook, OneDrive, Google Workspace apps.
+  homebrew = {
+    enable = true;
+    # "none" while migrating off brew formulae; flip to "uninstall" once the
+    # nix setup is proven so brew prunes everything not declared here.
+    onActivation.cleanup = "none";
+
+    casks = [
+      "ghostty"
+      "obsidian"
+      "slack"
+      "zoom"
+      "cursor"
+      "datagrip"
+      "figma"
+      "firefox"
+      "google-chrome"
+      "zen"
+      "keeper-password-manager"
+      "rectangle" # replaces abandoned Spectacle
+      "git-credential-manager"
+    ];
+  };
+
   system.defaults = {
     dock.autohide = true;
     finder.AppleShowAllExtensions = true;
     NSGlobalDomain.InitialKeyRepeat = 15;
     NSGlobalDomain.KeyRepeat = 2;
   };
-
-  users.users.${username}.home = "/Users/${username}";
-  system.primaryUser = username;
-
-  # NOTE: if you install *Determinate* Nix on the Mac (its graphical installer),
-  # it manages nix.conf itself — then set `nix.enable = false;` here and use the
-  # determinate nix-darwin module instead of the line below.
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Set to the current nix-darwin stateVersion (bump if a rebuild tells you to).
   system.stateVersion = 5;

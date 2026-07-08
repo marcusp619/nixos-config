@@ -13,3 +13,9 @@
 
 ## UI review
 - When reviewing or implementing UI changes, be pixel-perfect. Check alignment, spacing, color, and typography against the design. Do not approve changes that differ visually from the spec.
+
+## Extended ruleset
+
+Anbeeld's global rules (vendored from github.com/Anbeeld/AGENTS.md, see AGENTS-anbeeld.md):
+
+@~/nix-config/home/files/AGENTS-anbeeld.md

@@ -5,5 +5,6 @@
     bitwarden-desktop
     bambu-studio
     vlc
+    ghostty
   ];
 }
