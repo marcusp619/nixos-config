@@ -17,7 +17,7 @@
     sops age velero minio-client cloudflared
 
     # terminal emulator
-    wezterm
+    ghostty
 
     # editor
     neovim
@@ -28,9 +28,9 @@
   ];
 
   # ── symlink live config dirs out of the store ────────────────────────────
-  home.file.".config/wezterm".source =
+  home.file.".config/ghostty".source =
     config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/nix-config/home/files/wezterm";
+      "${config.home.homeDirectory}/nix-config/home/files/ghostty";
 
   home.file.".config/nvim".source =
     config.lib.file.mkOutOfStoreSymlink

@@ -1,0 +1,11 @@
+font-family = Hack Nerd Font
+font-size = 13
+
+theme = rose-pine-moon
+
+window-decoration = false
+background-opacity = 0.92
+window-padding-x = 8
+window-padding-y = 8
+
+scrollback-limit = 10000
