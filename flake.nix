@@ -42,22 +42,22 @@
     };
 
     # ── MacBook Pro 2017 running NixOS (x86_64) ───────────────────────────────
-    nixosConfigurations.macbook-pro = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.personal-macbook = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs username; };
       modules = [
-        ./hosts/macbook-pro/configuration.nix
+        ./hosts/personal-macbook/configuration.nix
         home-manager.nixosModules.home-manager
         hmModule
       ];
     };
 
-    # ── M1 MacBook (macOS, nix-darwin) ────────────────────────────────────────
-    darwinConfigurations.macbook = nix-darwin.lib.darwinSystem {
+    # ── Work MacBook (macOS, nix-darwin) ──────────────────────────────────────
+    darwinConfigurations.work-macbook = nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       specialArgs = { inherit inputs username; };
       modules = [
-        ./hosts/macbook/darwin.nix
+        ./hosts/work-macbook/darwin.nix
         home-manager.darwinModules.home-manager
         hmModule
       ];

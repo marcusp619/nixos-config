@@ -22,7 +22,7 @@
   '';
 
   # ── Networking ────────────────────────────────────────────────────────────
-  networking.hostName            = "macbook-pro";
+  networking.hostName            = "personal-macbook";
   networking.networkmanager.enable = true;
   hardware.wirelessRegulatoryDatabase = true;
 
