@@ -12,13 +12,6 @@
     # nix authoring
     nixd alejandra just
 
-    # homelab / k8s
-    kubectl k9s kubectx kubernetes-helm kustomize argocd
-    sops age velero minio-client cloudflared
-
-    # terminal emulator
-    ghostty
-
     # editor
     neovim
 
@@ -28,6 +21,8 @@
   ];
 
   # ── symlink live config dirs out of the store ────────────────────────────
+  # Ghostty is the terminal everywhere — the app comes from a cask on darwin
+  # and pkgs.ghostty on linux (see personal-apps.nix).
   home.file.".config/ghostty".source =
     config.lib.file.mkOutOfStoreSymlink
       "${config.home.homeDirectory}/nix-config/home/files/ghostty";
@@ -54,6 +49,8 @@
     enable = true;
     settings.user.name = "marcusp619";
     settings.user.email = "marcusp619@gmail.com";
+    settings.pull.ff = "only";
+    settings.init.defaultBranch = "main";
   };
 
   programs.delta = {
@@ -69,8 +66,8 @@
   };
 
   programs.starship.enable = true;
-  programs.zoxide.enable = true;
-  programs.fzf.enable = true;
+  programs.zoxide.enable   = true;
+  programs.fzf.enable      = true;
 
   programs.direnv = {
     enable = true;
