@@ -98,17 +98,7 @@
     shell        = pkgs.zsh;
   };
 
-  # ── System-wide GUI apps ───────────────────────────────────────────────────
-  environment.systemPackages = with pkgs; [
-    firefox
-    discord
-    bitwarden-desktop
-    obsidian
-    vlc
-    spotify
-    bambu-studio
-    appimage-run
-  ];
+  # GUI apps are managed by home-manager (home/desktop.nix + home/personal-apps.nix)
 
   time.timeZone      = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";

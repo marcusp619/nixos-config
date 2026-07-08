@@ -121,17 +121,15 @@
     shell        = pkgs.zsh;
   };
 
-  # ── System-wide GUI apps ───────────────────────────────────────────────────
+  # ── Gaming ────────────────────────────────────────────────────────────────
+  programs.steam.enable = true;
+
+  # GUI apps shared with desktop are managed by home-manager (home/personal-apps.nix)
   environment.systemPackages = with pkgs; [
-    firefox
-    spotify
-    discord
-    steam
     appimage-run
-    bambu-studio
     tiny-dfr
     alsa-utils
-    # Tauri / GTK build deps — keep while you're doing Rust desktop dev on this machine
+    # Tauri / GTK build deps
     webkitgtk_4_1
     libsoup_2_4
     gtk3
