@@ -11,7 +11,7 @@
     };
 
     nix-darwin = {
-      url = "github:nix-darwin/nix-darwin";
+      url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -27,6 +27,7 @@
     mkHmCfg = username: modules: {
       home-manager.useGlobalPkgs    = true;
       home-manager.useUserPackages  = true;
+      home-manager.backupFileExtension = "hm-backup";
       home-manager.extraSpecialArgs = { inherit inputs username; };
       home-manager.users.${username} = { imports = modules; };
     };

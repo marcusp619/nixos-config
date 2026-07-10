@@ -54,12 +54,11 @@
     lua-language-server
 
     # db clients — servers run in containers
-    mysql-client
+    mariadb.client # mysql wire-compatible; nixpkgs dropped mysql-client
     postgresql
     redis
 
-    # misc
-    newrelic-cli
+    # misc — newrelic-cli isn't in nixpkgs; it comes from homebrew.brews
     git-filter-repo
     wget
   ];

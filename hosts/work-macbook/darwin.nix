@@ -14,6 +14,7 @@
   # Nonstandard build users (gid 750, uids 751+): the defaults (350/351+)
   # collide with BeyondTrust's _avectodaemon and _defendpoint on this machine.
   ids.gids.nixbld = 750;
+  ids.uids.nixbld = 750; # _nixbld1 = base + 1
 
   fonts.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
 
@@ -27,11 +28,14 @@
     # nix setup is proven so brew prunes everything not declared here.
     onActivation.cleanup = "none";
 
+    # CLI tools not packaged in nixpkgs
+    brews = [ "newrelic-cli" ];
+
     casks = [
       "ghostty"
       "obsidian"
       "slack"
-      "zoom"
+      # zoom intentionally absent: IT manages it; cask upgrade fights the MDM install
       "cursor"
       "datagrip"
       "figma"
