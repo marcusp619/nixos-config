@@ -11,6 +11,10 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.settings.trusted-users = [ "root" username ];
 
+  # Nonstandard build users (gid 750, uids 751+): the defaults (350/351+)
+  # collide with BeyondTrust's _avectodaemon and _defendpoint on this machine.
+  ids.gids.nixbld = 750;
+
   fonts.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
 
   # GUI apps via Homebrew casks — more reliable than nixpkgs for mac apps.
