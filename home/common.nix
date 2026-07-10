@@ -27,6 +27,12 @@
     config.lib.file.mkOutOfStoreSymlink
       "${config.home.homeDirectory}/nix-config/home/files/ghostty";
 
+  # Mutable symlink on purpose: herdr writes onboarding/settings state back
+  # into its config, and those writes should land in this repo.
+  home.file.".config/herdr".source =
+    config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/nix-config/home/files/herdr";
+
   home.file.".config/nvim".source =
     config.lib.file.mkOutOfStoreSymlink
       "${config.home.homeDirectory}/nix-config/home/files/nvim";

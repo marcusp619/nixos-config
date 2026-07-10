@@ -1,0 +1,10 @@
+# Herdr config — managed in nix-config via mkOutOfStoreSymlink, so edits here
+# (including herdr's own writes, like onboarding state) land back in the repo.
+# Apply changes to a running server with: herdr server reload-config
+
+[update]
+# Nix owns the binary; disable herdr's self-update version checks
+version_check = false
+
+[worktrees]
+directory = "~/.herdr/worktrees"
