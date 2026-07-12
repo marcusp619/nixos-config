@@ -56,6 +56,13 @@
     capSysAdmin  = true;
   };
 
+  # ── Auto-upgrade ──────────────────────────────────────────────────────────
+  system.autoUpgrade = {
+    enable = true;
+    flake  = "github:marcusp619/nixos-config#desktop";
+    dates  = "daily";
+  };
+
   # ── Zram swap ─────────────────────────────────────────────────────────────
   zramSwap.enable = true;
 
