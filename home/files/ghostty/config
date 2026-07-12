@@ -1,12 +1,12 @@
 font-family = Hack Nerd Font
 font-size = 13
 
-theme = rose-pine-moon
+theme = Rose Pine Moon
 
 cursor-style = block
 copy-on-select = false
 
-window-decoration = false
+window-decoration = true
 background-opacity = 0.92
 macos-titlebar-style = transparent
 window-padding-x = 8

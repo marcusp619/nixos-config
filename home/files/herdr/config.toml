@@ -1,0 +1,20 @@
+onboarding = false
+
+[ui]
+show_agent_labels_on_pane_borders = true
+
+[ui.toast]
+delivery = "herdr"
+
+[theme]
+name = "catppuccin"
+auto_switch = false
+
+[terminal]
+new_cwd = "follow"
+
+[update]
+channel = "stable"
+
+[keys]
+# prefix = "ctrl+b"
