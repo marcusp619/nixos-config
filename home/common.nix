@@ -31,6 +31,10 @@
     config.lib.file.mkOutOfStoreSymlink
       "${config.home.homeDirectory}/nix-config/home/files/nvim";
 
+  home.file.".config/herdr".source =
+    config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/nix-config/home/files/herdr";
+
   # ── AGENTS.md → every agent tool's expected location ─────────────────────
   home.file.".claude/CLAUDE.md".source =
     config.lib.file.mkOutOfStoreSymlink

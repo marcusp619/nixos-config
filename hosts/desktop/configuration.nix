@@ -48,6 +48,13 @@
     remotePlay.openFirewall = true;
   };
   programs.gamemode.enable = true;
+  hardware.steam-hardware.enable = true;
+
+  services.sunshine = {
+    enable      = true;
+    openFirewall = true;
+    capSysAdmin  = true;
+  };
 
   # ── Zram swap ─────────────────────────────────────────────────────────────
   zramSwap.enable = true;
@@ -94,7 +101,7 @@
   # ── User ──────────────────────────────────────────────────────────────────
   users.users.${username} = {
     isNormalUser = true;
-    extraGroups  = [ "wheel" "networkmanager" "docker" ];
+    extraGroups  = [ "wheel" "networkmanager" "docker" "input" ];
     shell        = pkgs.zsh;
   };
 
