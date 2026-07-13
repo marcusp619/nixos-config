@@ -1,0 +1,53 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-linux:
+    name: Check ${{ matrix.host }} (x86_64-linux)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        host: [desktop, personal-macbook]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+
+      - name: Build ${{ matrix.host }} configuration
+        run:
+          nix build .#nixosConfigurations.${{ matrix.host
+          }}.config.system.build.toplevel --dry-run
+
+  check-darwin:
+    name: Check work-macbook (aarch64-darwin)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+
+      - name: Build work-macbook configuration
+        run: nix build .#darwinConfigurations.work-macbook.system --dry-run
+
+  # Lets the nightly flake.lock PRs (labeled 'automated') merge themselves
+  # once every host config passes. Requires auto-merge enabled in repo settings.
+  auto-merge:
+    needs: [check-linux, check-darwin]
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'automated')
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Enable auto-merge
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
