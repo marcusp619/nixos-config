@@ -2,9 +2,28 @@
 # (including herdr's own writes, like onboarding state) land back in the repo.
 # Apply changes to a running server with: herdr server reload-config
 
+onboarding = false
+
+[ui]
+show_agent_labels_on_pane_borders = true
+
+[ui.toast]
+delivery = "herdr"
+
+[theme]
+name = "catppuccin"
+auto_switch = false
+
+[terminal]
+new_cwd = "follow"
+
 [update]
+channel = "stable"
 # Nix owns the binary; disable herdr's self-update version checks
 version_check = false
 
 [worktrees]
 directory = "~/.herdr/worktrees"
+
+[keys]
+# prefix = "ctrl+b"

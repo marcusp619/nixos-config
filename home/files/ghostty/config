@@ -1,15 +1,15 @@
-# Modern Dev Setup — Ghostty
+font-family = Hack Nerd Font
+font-size = 13
 
-
-font-family = "JetBrainsMono Nerd Font"
-font-size = 14
+theme = Rose Pine Moon
 
 cursor-style = block
+copy-on-select = false
 
-window-padding-x = 14
-window-padding-y = 12
-background-opacity = 0.97
+window-decoration = true
+background-opacity = 0.92
 macos-titlebar-style = transparent
+window-padding-x = 8
+window-padding-y = 8
 
 scrollback-limit = 200000
-copy-on-select = false

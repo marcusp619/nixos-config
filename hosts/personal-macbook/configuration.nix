@@ -121,6 +121,13 @@
     shell        = pkgs.zsh;
   };
 
+  # ── Auto-upgrade ──────────────────────────────────────────────────────────
+  system.autoUpgrade = {
+    enable = true;
+    flake  = "github:marcusp619/nixos-config#personal-macbook";
+    dates  = "daily";
+  };
+
   # ── Gaming ────────────────────────────────────────────────────────────────
   programs.steam.enable = true;
 
