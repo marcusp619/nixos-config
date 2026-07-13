@@ -10,6 +10,14 @@
   # volume mount. If that ever changes to Determinate Nix, set nix.enable = false.
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.settings.trusted-users = [ "root" username ];
+  nix.settings.substituters = [
+    "https://cache.nixos.org"
+    "https://claude-code.cachix.org"
+  ];
+  nix.settings.trusted-public-keys = [
+    "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
+  ];
 
   # Nonstandard build users (gid 750, uids 751+): the defaults (350/351+)
   # collide with BeyondTrust's _avectodaemon and _defendpoint on this machine.

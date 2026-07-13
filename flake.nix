@@ -16,6 +16,9 @@
     };
 
     herdr.url = "github:ogulcancelik/herdr";
+
+    # Keeps its own nixpkgs pin so its cachix cache stays hit.
+    claude-code.url = "github:sadjow/claude-code-nix";
   };
 
   outputs = { self, nixpkgs, home-manager, nix-darwin, ... }@inputs:

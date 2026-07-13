@@ -107,8 +107,11 @@
 
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.permittedInsecurePackages = [
+    # version suffix tracks the kernel; bump when flake updates move it
     "broadcom-sta-6.30.223.271-59-6.18.22"
+    "broadcom-sta-6.30.223.271-59-6.18.37"
     "libsoup-2.74.3"
+    "electron-39.8.10" # EOL electron via bitwarden-desktop, same as desktop host
   ];
 
   # ── Shell ─────────────────────────────────────────────────────────────────
