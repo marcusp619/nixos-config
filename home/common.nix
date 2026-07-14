@@ -66,6 +66,9 @@
     enable = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+    initContent = ''
+      setopt AUTO_CD
+    '';
   };
 
   programs.starship.enable = true;
