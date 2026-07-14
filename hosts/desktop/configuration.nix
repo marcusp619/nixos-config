@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, username, ... }:
+{ config, pkgs, lib, inputs, username, ... }:
 {
   imports = [ ./hardware-configuration.nix ];
 
@@ -93,7 +93,10 @@
   };
 
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.permittedInsecurePackages = [ "electron-39.8.10" ];
+  # By name, not exact version: the version string drifts with nixpkgs bumps
+  # and was breaking the nightly flake.lock CI. EOL electron via bitwarden-desktop.
+  nixpkgs.config.allowInsecurePredicate = pkg:
+    builtins.elem (lib.getName pkg) [ "electron" ];
 
   # ── Shell ─────────────────────────────────────────────────────────────────
   programs.zsh.enable = true;
