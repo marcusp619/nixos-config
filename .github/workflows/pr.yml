@@ -9,6 +9,7 @@ jobs:
     name: Check ${{ matrix.host }} (x86_64-linux)
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false # let each host report its own result
       matrix:
         host: [desktop, personal-macbook]
     steps:

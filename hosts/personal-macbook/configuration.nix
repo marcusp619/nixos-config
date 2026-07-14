@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, username, ... }:
+{ config, pkgs, lib, inputs, username, ... }:
 {
   imports = [ ./hardware-configuration.nix ];
 
@@ -106,13 +106,12 @@
   };
 
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.permittedInsecurePackages = [
-    # version suffix tracks the kernel; bump when flake updates move it
-    "broadcom-sta-6.30.223.271-59-6.18.22"
-    "broadcom-sta-6.30.223.271-59-6.18.37"
-    "libsoup-2.74.3"
-    "electron-39.8.10" # EOL electron via bitwarden-desktop, same as desktop host
-  ];
+  # Allow by name, not exact version: these version strings drift with every
+  # kernel/nixpkgs bump and were breaking the nightly flake.lock CI.
+  # broadcom-sta = this MacBook's wifi (no alternative); electron = EOL
+  # version pulled by bitwarden-desktop; libsoup = Tauri build dep.
+  nixpkgs.config.allowInsecurePredicate = pkg:
+    builtins.elem (lib.getName pkg) [ "broadcom-sta" "electron" "libsoup" ];
 
   # ── Shell ─────────────────────────────────────────────────────────────────
   programs.zsh.enable = true;
