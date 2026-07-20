@@ -41,7 +41,10 @@
   # as a fallback while the rice gets dialed in). Enabling this via the NixOS
   # module wraps the binary with cap_sys_nice, registers the SDDM session,
   # and auto-wires xdg-desktop-portal-hyprland as the default portal.
-  programs.hyprland.enable = true;
+  # withUWSM installs uwsm's systemd units so the hyprland-uwsm.desktop
+  # session (which Hyprland 0.45+ ships) can actually start.
+  programs.hyprland.enable   = true;
+  programs.hyprland.withUWSM = true;
   xdg.portal.extraPortals  = [ pkgs.xdg-desktop-portal-gtk ];
   xdg.portal.config = {
     hyprland.default = [ "hyprland" "gtk" ];
@@ -69,6 +72,11 @@
   };
   programs.gamemode.enable = true;
   hardware.steam-hardware.enable = true;
+
+  # Steam Input creates a virtual uinput device to remap the Steam Deck
+  # controller; without a udev rule granting uinput group access, Steam
+  # falls back to a polkit prompt every time the controller powers on.
+  hardware.uinput.enable = true;
 
   services.sunshine = {
     enable      = true;
@@ -124,7 +132,7 @@
   # ── User ──────────────────────────────────────────────────────────────────
   users.users.${username} = {
     isNormalUser = true;
-    extraGroups  = [ "wheel" "networkmanager" "docker" "input" ];
+    extraGroups  = [ "wheel" "networkmanager" "docker" "input" "uinput" ];
     shell        = pkgs.zsh;
   };
 
