@@ -5,9 +5,17 @@ let
 
   rasi = config.lib.formats.rasi.mkLiteral;
 
+  # Nix-level variables instead of hyprlang $vars: Hyprland's Lua config
+  # (which home-manager now generates) has no $variable concept, and attrs
+  # like "$mod" render as invalid Lua (hl.$mod(...)).
+  mod         = "SUPER";
+  terminal    = "ghostty";
+  fileManager = "nautilus";
+  menu        = "rofi -show drun";
+
   workspaceBinds = lib.concatMap (i: [
-    "$mod, ${toString i}, workspace, ${toString i}"
-    "$mod SHIFT, ${toString i}, movetoworkspace, ${toString i}"
+    "${mod}, ${toString i}, workspace, ${toString i}"
+    "${mod} SHIFT, ${toString i}, movetoworkspace, ${toString i}"
   ]) (lib.range 1 9);
 in
 {
@@ -28,6 +36,11 @@ in
     enable  = true;
     package = null;
 
+    # stateVersion >= 26.05 flipped the default to "lua", which renders this
+    # hyprlang-style settings tree as broken Lua (hl.exec-once(...), etc.).
+    # Pin hyprlang; migrating to the Lua API is a separate project.
+    configType = "hyprlang";
+
     settings = {
       monitor = [ ",5120x1440@240,auto,1" ];
 
@@ -39,11 +52,6 @@ in
         "QT_QPA_PLATFORMTHEME,gtk3"
         "NIXOS_OZONE_WL,1"
       ];
-
-      "$mod" = "SUPER";
-      "$terminal" = "ghostty";
-      "$fileManager" = "nautilus";
-      "$menu" = "rofi -show drun";
 
       input = {
         kb_layout   = "us";
@@ -113,24 +121,24 @@ in
       "exec-once" = [ "hyprpolkitagent" ];
 
       bind = [
-        "$mod, Return, exec, $terminal"
-        "$mod, Q, killactive"
-        "$mod SHIFT, Q, exit"
-        "$mod, D, exec, $menu"
-        "$mod, E, exec, $fileManager"
-        "$mod, V, exec, cliphist list | rofi -dmenu -p clipboard | cliphist decode | wl-copy"
-        "$mod, F, togglefloating"
-        "$mod, P, pseudo"
-        "$mod, J, togglesplit"
-        "$mod, L, exec, hyprlock"
-        "$mod, Escape, exec, wlogout"
+        "${mod}, Return, exec, ${terminal}"
+        "${mod}, Q, killactive"
+        "${mod} SHIFT, Q, exit"
+        "${mod}, D, exec, ${menu}"
+        "${mod}, E, exec, ${fileManager}"
+        "${mod}, V, exec, cliphist list | rofi -dmenu -p clipboard | cliphist decode | wl-copy"
+        "${mod}, F, togglefloating"
+        "${mod}, P, pseudo"
+        "${mod}, J, togglesplit"
+        "${mod}, L, exec, hyprlock"
+        "${mod}, Escape, exec, wlogout"
         ", Print, exec, grim -g \"$(slurp)\" - | swappy -f -"
-        "$mod, Print, exec, grim - | swappy -f -"
+        "${mod}, Print, exec, grim - | swappy -f -"
       ] ++ workspaceBinds;
 
       bindm = [
-        "$mod, mouse:272, movewindow"
-        "$mod, mouse:273, resizewindow"
+        "${mod}, mouse:272, movewindow"
+        "${mod}, mouse:273, resizewindow"
       ];
 
       bindel = [
