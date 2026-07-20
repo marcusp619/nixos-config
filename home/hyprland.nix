@@ -42,10 +42,7 @@ in
     configType = "hyprlang";
 
     settings = {
-      # Temporary diagnostic: forcing preferred mode instead of 5120x1440@240
-      # to test whether that timing/bandwidth is causing Hyprland to hang on
-      # startup under uwsm. Revert once confirmed either way.
-      monitor = [ ",preferred,auto,1" ];
+      monitor = [ ",5120x1440@240,auto,1" ];
 
       env = [
         "XCURSOR_THEME,${cursorName}"
