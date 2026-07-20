@@ -435,6 +435,9 @@ in
         accents = [ "mauve" ];
       };
     };
+    # stateVersion >= 26.05 flipped gtk4.theme's default from "follow
+    # gtk.theme" to null; pin it so GTK4 apps keep the catppuccin theme.
+    gtk4.theme = config.gtk.theme;
     iconTheme = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
