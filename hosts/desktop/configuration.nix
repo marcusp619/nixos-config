@@ -28,7 +28,7 @@
     pulse.enable      = true;
   };
 
-  # ── Desktop (Plasma 6 + SDDM) ─────────────────────────────────────────────
+  # ── Desktop (Plasma 6 + SDDM, Hyprland available as a second session) ────
   services.xserver.enable               = true;
   services.displayManager.sddm.enable   = true;
   services.desktopManager.plasma6.enable = true;
@@ -36,6 +36,26 @@
     layout  = "us";
     options = "caps:escape";
   };
+
+  # Hyprland session alongside Plasma (SDDM lists both at login; Plasma stays
+  # as a fallback while the rice gets dialed in). Enabling this via the NixOS
+  # module wraps the binary with cap_sys_nice, registers the SDDM session,
+  # and auto-wires xdg-desktop-portal-hyprland as the default portal.
+  programs.hyprland.enable = true;
+  xdg.portal.extraPortals  = [ pkgs.xdg-desktop-portal-gtk ];
+  xdg.portal.config = {
+    hyprland.default = [ "hyprland" "gtk" ];
+    common.default   = [ "gtk" ]; # fallback for the Plasma/other sessions
+  };
+
+  # GUI apps need a session-agnostic polkit agent and dconf; Plasma normally
+  # supplies both itself, but Hyprland does not.
+  security.polkit.enable = true;
+  programs.dconf.enable  = true;
+  services.gvfs.enable   = true; # trash/network mounts for nautilus under Hyprland
+
+  # Sunshine's KMS capture path (services.sunshine.capSysAdmin below) works
+  # under Hyprland without any portal screen-picker, same as it does today.
 
   # ── Services ──────────────────────────────────────────────────────────────
   services.openssh.enable    = true;

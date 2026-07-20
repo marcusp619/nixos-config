@@ -47,6 +47,7 @@
           ./home/common.nix
           ./home/personal-apps.nix
           ./home/desktop-apps.nix
+          ./home/hyprland.nix
         ])
       ];
     };
