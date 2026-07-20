@@ -66,7 +66,11 @@ in
         border_size = 2;
         "col.active_border"   = "rgba(cba6f7ee) rgba(89b4faee) 45deg";
         "col.inactive_border" = "rgba(45475aaa)";
-        layout        = "dwindle";
+        # Temporary workaround: dwindle's calculateWorkspace() null-derefs in
+        # CDwindleAlgorithm::removeTarget during compositor shutdown cleanup
+        # (segfault confirmed via coredumpctl on 2026-07-20, Hyprland 0.55.4).
+        # Switch back to dwindle once upstream fixes the exit-path crash.
+        layout        = "master";
         resize_on_border = true;
         # Tearing allowed (opt-in per window below) to keep input latency low
         # for fullscreen games while streaming via Sunshine.
@@ -105,21 +109,19 @@ in
       };
 
       dwindle = {
-        pseudotile     = true;
         preserve_split = true;
       };
 
       misc = {
         disable_hyprland_logo    = true;
         disable_splash_rendering = true;
-        vfr = true;
+        # vfr removed — option no longer exists in Hyprland 0.55+
       };
 
-      windowrulev2 = [
-        "float, class:^(nautilus)$, title:^(Open File|Save File)$"
-        # Reduce input latency for games (Steam wraps them as steam_app_<id>).
-        "immediate, class:^(steam_app_.*)$"
-      ];
+      # windowrule/layerrule have no hyprlang syntax as of Hyprland 0.55 —
+      # they only exist via the new Lua API (hl.window_rule()). Dropped here
+      # until the Lua config migration; previously covered nautilus file
+      # dialogs auto-floating and tearing/immediate for Steam games.
 
       "exec-once" = [ "hyprpolkitagent" ];
 
