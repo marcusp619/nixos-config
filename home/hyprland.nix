@@ -77,10 +77,13 @@ in
         rounding = 8;
         active_opacity   = 1.0;
         inactive_opacity = 0.95;
-        drop_shadow = true;
-        shadow_range = 20;
-        shadow_render_power = 3;
-        "col.shadow" = "rgba(11111bee)";
+        # Hyprland 0.45 moved shadow_* / col.shadow into a nested shadow block.
+        shadow = {
+          enabled = true;
+          range = 20;
+          render_power = 3;
+          color = "rgba(11111bee)";
+        };
         blur = {
           enabled  = true;
           size     = 6;
@@ -129,7 +132,8 @@ in
         "${mod}, V, exec, cliphist list | rofi -dmenu -p clipboard | cliphist decode | wl-copy"
         "${mod}, F, togglefloating"
         "${mod}, P, pseudo"
-        "${mod}, J, togglesplit"
+        # Hyprland 0.54 removed the standalone togglesplit dispatcher in favor of layoutmsg.
+        "${mod}, J, layoutmsg, togglesplit"
         "${mod}, L, exec, hyprlock"
         "${mod}, Escape, exec, wlogout"
         ", Print, exec, grim -g \"$(slurp)\" - | swappy -f -"
