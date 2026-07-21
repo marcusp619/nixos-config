@@ -39,9 +39,14 @@
     # CLI tools not packaged in nixpkgs
     brews = [ "newrelic-cli" ];
 
+    # ZenNotes' own flake only builds the desktop app for x86_64-linux, so
+    # aarch64-darwin gets it from their Homebrew tap instead.
+    taps = [ "zennotes/tap" ];
+
     casks = [
       "ghostty"
       "obsidian"
+      "zennotes"
       "slack"
       # zoom intentionally absent: IT manages it; cask upgrade fights the MDM install
       "cursor"
