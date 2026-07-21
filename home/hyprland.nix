@@ -229,8 +229,8 @@ in
     settings = {
       ipc = "on";
       splash = false;
-      preload  = [ "${pkgs.nixos-artwork.wallpapers.catppuccin-mocha.gnomeFilePath}" ];
-      wallpaper = [ ",${pkgs.nixos-artwork.wallpapers.catppuccin-mocha.gnomeFilePath}" ];
+      preload  = [ "${./files/wallpapers/koishi.jpg}" ];
+      wallpaper = [ ",${./files/wallpapers/koishi.jpg}" ];
     };
   };
 
@@ -250,6 +250,11 @@ in
     # rofi-wayland was merged into rofi upstream; the default package is
     # already Wayland-native.
     font = "JetBrainsMono Nerd Font 12";
+    # Papirus-Dark is already the system icon theme (see gtk.iconTheme below).
+    extraConfig = {
+      show-icons = true;
+      icon-theme = "Papirus-Dark";
+    };
     theme = {
       "*" = {
         background        = rasi "#1e1e2ee6";
@@ -265,25 +270,30 @@ in
         border = 2;
         "border-color" = rasi "@selected";
         "border-radius" = 12;
-        width = 480;
+        width = 560;
       };
       mainbox.children = map rasi [ "inputbar" "listview" ];
       inputbar = {
         children = map rasi [ "prompt" "entry" ];
-        padding = 12;
+        padding = "12px 14px";
+        spacing = 8;
         "background-color" = rasi "@background-alt";
         "border-radius" = 8;
       };
       entry.placeholder = "Search...";
       listview = {
         lines = 8;
-        padding = "8px 0px";
+        "fixed-height" = false;
+        padding = "8px";
+        spacing = 4;
         scrollbar = false;
       };
       element = {
-        padding = "8px 12px";
+        padding = "8px 10px";
+        spacing = 10;
         "border-radius" = 8;
       };
+      "element-icon".size = 28;
       "element selected" = {
         "background-color" = rasi "@selected";
         "text-color" = rasi "@background";
@@ -421,6 +431,15 @@ in
       border-color: #cba6f7;
       background: #45475a;
     }
+  '';
+
+  # ── swappy (screenshot editor) ───────────────────────────────────────────
+  # Without this file swappy's Save button defaults to $XDG_DESKTOP_DIR
+  # (~/Desktop), not ~/Pictures/Screenshots.
+  xdg.configFile."swappy/config".text = ''
+    [Default]
+    save_dir=$HOME/Pictures/Screenshots
+    save_filename_format=swappy-%Y%m%d-%H%M%S.png
   '';
 
   # ── GTK / Qt / cursor theming ────────────────────────────────────────────
