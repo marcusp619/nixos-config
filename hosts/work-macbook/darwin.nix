@@ -5,9 +5,14 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  # Upstream Nix installed with NIX_VOLUME_CREATE=0 + synthetic.conf symlink
-  # (/nix -> /System/Volumes/Data/nix) because Kandji MDM blocks the Nix Store
-  # volume mount. If that ever changes to Determinate Nix, set nix.enable = false.
+  # Upstream Nix (plain installer, not Determinate) using the standard mechanism:
+  # a dedicated "Nix Store" APFS volume + synthetic.conf mountpoint, mounted at
+  # /nix by org.nixos.darwin-store.plist. If that ever changes to Determinate
+  # Nix, set nix.enable = false.
+  #
+  # This mount is gated by Kandji's SystemUIServer "harddisk-internal" policy —
+  # it needs an MDM exception per-device. It worked on the previous M1 without
+  # one; a freshly-enrolled machine may need IT to (re)apply the exception.
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.settings.trusted-users = [ "root" username ];
   nix.settings.substituters = [
@@ -57,7 +62,6 @@
       "zen"
       "keeper-password-manager"
       "rectangle" # replaces abandoned Spectacle
-      "git-credential-manager"
     ];
   };
 

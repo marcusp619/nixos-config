@@ -72,12 +72,6 @@
     "$HOME/.cargo/bin"
   ];
 
-  # Work repos authenticate through git-credential-manager (installed as a cask).
-  programs.git.settings = {
-    credential.helper = [ "" "/usr/local/share/gcm-core/git-credential-manager" ];
-    credential."https://dev.azure.com".useHttpPath = true;
-  };
-
   programs.zsh.initContent = ''
     # Shared helper — fuzzy-pick a subdir and cd into it (requires fzf)
     _pick_dir() {
