@@ -72,6 +72,11 @@
     "$HOME/.cargo/bin"
   ];
 
+  # AWS profiles/regions/SSO URLs only — no secrets. Credentials and SSO
+  # token cache stay local per machine, set up manually after activation.
+  home.file.".aws/config".source =
+    config.lib.meta.createSymlink "home/files/aws/config";
+
   programs.zsh.initContent = ''
     # Shared helper — fuzzy-pick a subdir and cd into it (requires fzf)
     _pick_dir() {

@@ -1,0 +1,196 @@
+[default]
+output=json
+region = us-east-1 
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 359622998587 
+sso_role_name = PowerUser 
+
+
+[dynamodb-proxy]
+source_profile=default
+dynamodb_endpoint_url=http://localhost:8000
+
+[okta]
+aws_saml_url=home/amazon_aws/0oa16jt03ry9LxRiE0h8/272
+
+[profile rv-main]
+aws_saml_url=home/amazon_aws/0oa16jt03ry9LxRiE0h8/272
+role_arn=arn:aws:iam::012466905530:role/assumeUser
+region=us-east-1
+output=json
+
+[profile rvmainsandbox]
+role_arn=arn:aws:iam::012466905530:role/assumeUserAWSSandboxes
+aws_saml_url=home/amazon_aws/0oa1i619wtkrqugrz0h8/272
+
+[profile rv-charter-sandbox]
+source_profile=rvmainsandbox
+role_arn=arn:aws:iam::998814084645:role/sandboxUser
+
+[profile insurance-prod]
+source_profile=rv-main
+role_arn=arn:aws:iam::306590166318:role/developer
+
+[profile insurance-dev]
+source_profile=rv-main
+role_arn=arn:aws:iam::359622998587:role/developer
+
+[profile ao-insurance-dev]
+source_profile=rv-main
+role_arn=arn:aws:iam::359622998587:role/accountOwner
+
+[profile ao-insurance-prod]
+source_profile=rv-main
+role_arn=arn:aws:iam::306590166318:role/accountOwner
+
+[profile rv-legacy-developer]
+source_profile=rvmain
+role_arn=arn:aws:iam::522859615141:role/developer3
+
+[profile rv-insurance-sandbox]
+source_profile=rvmainsandbox
+role_arn=arn:aws:iam::654267624722:role/sandboxUser
+
+[profile insurance-amplify-sandbox]
+region=us-east-1
+
+[profile amplify-mpearyer]
+region=us-east-1
+
+[profile sso-insurance-dev]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 359622998587 
+sso_role_name = PowerUser 
+region = us-east-1
+output = json
+
+[profile sso-insurance-dev-admin]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 359622998587 
+sso_role_name = Administrator 
+region = us-east-1
+output = json
+
+
+[profile sso-insurance-prod]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 306590166318 
+sso_role_name = PowerUser 
+region = us-east-1
+
+[profile sso-insurance-prod-admin]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 306590166318 
+sso_role_name = Administrator
+region = us-east-1
+
+
+[profile sso-coverage-nonprod]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 975049932502
+sso_role_name = PowerUser 
+region = us-east-1
+
+[profile sso-coverage-nonprod-admin]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 975049932502
+sso_role_name = Administrator 
+region = us-east-1
+
+[profile sso-coverage-prod]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 992382722259
+sso_role_name = PowerUser 
+region = us-east-1
+
+[profile sso-coverage-prod-admin]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 992382722259
+sso_role_name = Administrator
+region = us-east-1
+
+[profile sso-coverage-dbx-prod]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 590184017493
+sso_role_name = PowerUser
+region = us-east-1
+
+
+[profile sso-insurance-sandbox]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 654267624722 
+sso_role_name = SandboxAdmin 
+region = us-east-1
+
+[profile sso-seo-dev]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 427034164244 
+sso_role_name = PowerUser 
+region = us-east-1
+
+[profile sso-seo-prod]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 054715827583 
+sso_role_name = PowerUser 
+region = us-east-1
+
+[profile sso-reviews]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 378833337923
+sso_role_name = PowerUser
+region = us-east-1
+
+[profile sso-bankrate]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 835272777014
+sso_role_name = FinServDeveloperPlus
+region = us-east-1
+
+[profile Administrator-359622998587]
+sso_session = insurance
+sso_account_id = 359622998587
+sso_role_name = PowerUser
+region = us-east-1
+
+[profile sso-coda-nonprod]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 585008061833
+sso_role_name = PowerUser
+region = us-east-1
+
+[profile sso-coda-prod]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 682033494545
+sso_role_name = PowerUser
+region = us-east-1
+output = json
+
+[sso-session insurance]
+sso_start_url = https://rv.awsapps.com/start/
+sso_region = us-east-1
+sso_registration_scopes = sso:account:access
+
+[profile run]
+sso_start_url = https://rv.awsapps.com/start/
+sso_region = us-east-1
+sso_account_id = 418272776050
+sso_role_name = RedPlatformRun2024Eks
+region = us-east-1
+output = json
