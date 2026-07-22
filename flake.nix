@@ -16,6 +16,7 @@
     };
 
     herdr.url = "github:ogulcancelik/herdr";
+    zennotes.url = "github:ZenNotes/zennotes";
 
     # Keeps its own nixpkgs pin so its cachix cache stays hit.
     claude-code.url = "github:sadjow/claude-code-nix";

@@ -68,6 +68,7 @@
     syntaxHighlighting.enable = true;
     initContent = ''
       setopt AUTO_CD
+      setopt INTERACTIVE_COMMENTS
     '';
   };
 
