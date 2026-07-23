@@ -19,6 +19,22 @@
         "type": "github"
       }
     },
+    "dots-hyprland": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784595144,
+        "narHash": "sha256-3rsnr2uTzwTRQHehnh38UOta9FbgxlkGV1LplZyb3co=",
+        "owner": "marcusp619",
+        "repo": "dots-hyprland",
+        "rev": "7e61a6a56ac92b767dcba65b3fc380f40fddc823",
+        "type": "github"
+      },
+      "original": {
+        "owner": "marcusp619",
+        "repo": "dots-hyprland",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -181,12 +197,30 @@
     "root": {
       "inputs": {
         "claude-code": "claude-code",
+        "dots-hyprland": "dots-hyprland",
         "herdr": "herdr",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "rounded-polygon-qmljs": "rounded-polygon-qmljs",
         "zennotes": "zennotes"
+      }
+    },
+    "rounded-polygon-qmljs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1771173575,
+        "narHash": "sha256-p1Ia0oQCWnik2saVMgv7IABkaJV43PoY7uuwXjXlc+Q=",
+        "owner": "end-4",
+        "repo": "rounded-polygon-qmljs",
+        "rev": "e31ec4cb4ebf6a46b267f5c42eabf6874916fa16",
+        "type": "github"
+      },
+      "original": {
+        "owner": "end-4",
+        "repo": "rounded-polygon-qmljs",
+        "type": "github"
       }
     },
     "rust-overlay": {

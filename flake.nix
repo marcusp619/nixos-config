@@ -18,6 +18,23 @@
     herdr.url = "github:ogulcancelik/herdr";
     zennotes.url = "github:ZenNotes/zennotes";
 
+    # Fork of end-4/dots-hyprland ("illogical-impulse"); source of the
+    # Quickshell shell, Hyprland Lua config tree, and matugen theming
+    # deployed read-only by home/dots-hyprland.nix.
+    dots-hyprland = {
+      url = "github:marcusp619/dots-hyprland";
+      flake = false;
+    };
+
+    # dots-hyprland's .gitmodules points quickshell/ii/modules/common/
+    # widgets/shapes at this repo as a git submodule; GitHub's source
+    # tarball (what the flake input above fetches) doesn't include
+    # submodule content, so it has to be fetched and merged in separately.
+    rounded-polygon-qmljs = {
+      url = "github:end-4/rounded-polygon-qmljs";
+      flake = false;
+    };
+
     # Keeps its own nixpkgs pin so its cachix cache stays hit.
     claude-code.url = "github:sadjow/claude-code-nix";
   };
@@ -48,7 +65,7 @@
           ./home/common.nix
           ./home/personal-apps.nix
           ./home/desktop-apps.nix
-          ./home/hyprland.nix
+          ./home/dots-hyprland.nix
         ])
       ];
     };

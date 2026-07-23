@@ -64,6 +64,9 @@
   services.openssh.enable    = true;
   services.tailscale.enable  = true;
   virtualisation.docker.enable = true;
+  # Location service backing ii's (dots-hyprland) auto-brightness/geoclue
+  # agent script, started from Hyprland's exec-once.
+  services.geoclue2.enable   = true;
 
   # ── Gaming ────────────────────────────────────────────────────────────────
   programs.steam = {

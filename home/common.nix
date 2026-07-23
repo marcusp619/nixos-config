@@ -19,8 +19,8 @@
 
     # AI agents — claude-code from its own flake (fresher than nixpkgs;
     # binary cache claude-code.cachix.org is configured per-host)
-    inputs.claude-code.packages.${pkgs.system}.default
-    inputs.herdr.packages.${pkgs.system}.default
+    inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   # ── symlink live config dirs out of the store ────────────────────────────
