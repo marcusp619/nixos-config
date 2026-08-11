@@ -72,6 +72,9 @@
     NSGlobalDomain.KeyRepeat = 2;
   };
 
+  system.keyboard.enableKeyMapping = true;
+  system.keyboard.remapCapsLockToEscape = true;
+
   # Set to the current nix-darwin stateVersion (bump if a rebuild tells you to).
   system.stateVersion = 5;
 }
