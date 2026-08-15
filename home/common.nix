@@ -69,6 +69,10 @@
     settings.user.email = "marcusp619@gmail.com";
     settings.pull.ff = "only";
     settings.init.defaultBranch = "main";
+    settings.credential."https://github.com".helper =
+      "!${pkgs.gh}/bin/gh auth git-credential";
+    settings.credential."https://gist.github.com".helper =
+      "!${pkgs.gh}/bin/gh auth git-credential";
   };
 
   programs.delta = {
