@@ -1,6 +1,7 @@
 { pkgs, inputs, ... }:
 {
   home.packages = with pkgs; [
+    firefox
     discord
     bitwarden-desktop
     vlc
