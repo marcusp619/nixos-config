@@ -1,4 +1,12 @@
 { config, pkgs, lib, inputs, username, ... }:
+let
+  # The custom CS8409 module lands in extra/ as a symlink to another store path.
+  # depmod -b doesn't follow out-of-tree symlinks, so the module never appears in
+  # modules.dep and modprobe silently loads the mainline .ko.xz instead.
+  # Grab the exact store path so we can insmod it directly via an install override.
+  cs8409Pkg = config.boot.kernelPackages.callPackage ./pkgs/snd_hda_macbookpro.nix {};
+  cs8409Ko  = "${cs8409Pkg}/lib/modules/${config.boot.kernelPackages.kernel.modDirVersion}/extra/snd-hda-codec-cs8409.ko";
+in
 {
   imports = [ ./hardware-configuration.nix ];
 
@@ -19,6 +27,13 @@
   boot.extraModprobeConfig    = ''
     options cfg80211 ieee80211_regdom=US
     options apple-ib-tb fnmode=2
+
+    # Force-load the Apple-specific CS8409 driver instead of the mainline one.
+    # modprobe's 'install' directive intercepts all loads of snd_hda_codec_cs8409
+    # (including alias-based loads from the HDA framework) and runs this command
+    # instead.  We first load the dependency chain via the normal modprobe path,
+    # then insmod the custom .ko directly so depmod ordering is irrelevant.
+    install snd_hda_codec_cs8409 ${pkgs.kmod}/bin/modprobe --ignore-install snd-hda-codec-generic && ${pkgs.kmod}/bin/insmod ${cs8409Ko}
   '';
 
   # ── Networking ────────────────────────────────────────────────────────────
@@ -30,7 +45,9 @@
   hardware.enableRedistributableFirmware = true;
   hardware.firmware = [ pkgs.linux-firmware ];
 
-  # Intel GPU
+  # Intel iGPU (primary); AMD dGPU (amdgpu) is loaded by the kernel automatically
+  # but left in power-save / unused by the desktop session — Intel handles display.
+  # If you ever want to route rendering to the AMD card, set DRI_PRIME=1.
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [
     intel-media-driver
@@ -47,6 +64,9 @@
     pulse.enable      = true;
   };
 
+  # Speech synthesis (accessibility / TTS)
+  services.speechd.enable = true;
+
   # ── Desktop (GNOME + LightDM) ─────────────────────────────────────────────
   services.xserver.enable                        = true;
   services.xserver.displayManager.lightdm.enable = true;
@@ -55,6 +75,9 @@
     layout  = "us";
     options = "caps:escape";
   };
+
+  # Libinput — touchpad gestures and natural scrolling
+  services.libinput.enable = true;
 
   # ── Touch Bar ─────────────────────────────────────────────────────────────
   systemd.user.services.tiny-dfr = {
@@ -67,11 +90,19 @@
     };
   };
 
+  # ── Power management (old Intel + hybrid GPU laptop) ──────────────────────
+  services.thermald.enable          = true;  # Intel thermal management daemon
+  services.power-profiles-daemon.enable = true;  # GNOME power-profiles integration
+  powerManagement.enable            = true;  # systemd sleep/suspend integration
+
   # ── Services ──────────────────────────────────────────────────────────────
-  services.openssh.enable  = true;
+  services.openssh.enable   = true;
   services.tailscale.enable = true;
-  services.printing.enable = true;
+  services.printing.enable  = true;
   virtualisation.docker.enable = true;
+
+  # ── Zram swap ─────────────────────────────────────────────────────────────
+  zramSwap.enable = true;
 
   # ── Fonts ─────────────────────────────────────────────────────────────────
   fonts.packages = with pkgs; [
@@ -130,10 +161,7 @@
     dates  = "daily";
   };
 
-  # ── Gaming ────────────────────────────────────────────────────────────────
-  programs.steam.enable = true;
-
-  # GUI apps shared with desktop are managed by home-manager (home/personal-apps.nix)
+  # System packages for this host (GUI apps managed by home-manager)
   environment.systemPackages = with pkgs; [
     appimage-run
     tiny-dfr

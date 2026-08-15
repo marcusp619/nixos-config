@@ -21,6 +21,17 @@
     # binary cache claude-code.cachix.org is configured per-host)
     inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default
+
+    # homelab CLIs
+    kubectl
+    k9s
+    kubernetes-helm
+    argocd
+    sops
+    age
+    velero
+    minio-client
+    cloudflared
   ];
 
   # ── symlink live config dirs out of the store ────────────────────────────
