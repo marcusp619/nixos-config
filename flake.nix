@@ -79,7 +79,7 @@
         home-manager.nixosModules.home-manager
         (mkHmCfg personalUser [
           ./home/common.nix
-          ./home/personal-apps.nix
+          ./home/laptop-apps.nix
         ])
       ];
     };
