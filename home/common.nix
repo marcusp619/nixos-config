@@ -14,6 +14,9 @@
     # nix authoring
     nixd alejandra just
 
+    # node — nodejs_latest tracks whatever nixpkgs currently considers newest
+    nodejs_latest
+
     # editor
     neovim
 

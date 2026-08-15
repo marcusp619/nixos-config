@@ -24,8 +24,7 @@
     # terraform — global for now; move to per-project devShells eventually
     terraform
 
-    # node
-    nodejs_24
+    # node — nodejs itself now comes from home/common.nix (nodejs_latest)
     pnpm
     typescript
     typescript-language-server
