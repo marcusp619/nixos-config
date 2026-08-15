@@ -37,6 +37,9 @@
 
     # Keeps its own nixpkgs pin so its cachix cache stays hit.
     claude-code.url = "github:sadjow/claude-code-nix";
+
+    # Claude desktop app for Linux (not in nixpkgs yet)
+    claude-desktop.url = "github:k3d3/claude-desktop-linux-flake";
   };
 
   outputs = { self, nixpkgs, home-manager, nix-darwin, ... }@inputs:

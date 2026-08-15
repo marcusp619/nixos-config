@@ -32,6 +32,10 @@
     velero
     minio-client
     cloudflared
+  ] ++ lib.optionals pkgs.stdenv.isLinux [
+    # Claude desktop app — not in nixpkgs; community flake.
+    # macOS gets it via Homebrew cask on work-macbook.
+    inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop
   ];
 
   # ── symlink live config dirs out of the store ────────────────────────────
