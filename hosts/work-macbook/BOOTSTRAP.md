@@ -83,6 +83,19 @@ npm install -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claude-co
 
 The postinstall script is gated by npm and has to be allowed explicitly.
 
+## Caps lock
+
+`home/files/launchagents/local.keyboard.capslock-to-escape.plist` remaps caps lock to escape, replacing nix-darwin's `system.keyboard.remapCapsLockToEscape`.
+`hidutil` mappings only last until reboot, so a LaunchAgent re-applies it at every login:
+
+```sh
+ln -sfn ~/nix-config/home/files/launchagents/local.keyboard.capslock-to-escape.plist \
+        ~/Library/LaunchAgents/local.keyboard.capslock-to-escape.plist
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/local.keyboard.capslock-to-escape.plist
+```
+
+Setting Modifier Keys in System Settings instead would also persist, but it is per-keyboard-device and not reproducible from this repo.
+
 ## Shell configuration
 
 `~/.zshrc`, `~/.zshenv` and `~/.zprofile` live in `home/files/zsh/` and are symlinked into `$HOME` by step 3.

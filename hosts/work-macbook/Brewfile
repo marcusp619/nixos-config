@@ -91,7 +91,12 @@ brew "redis"
 # ── ai agent tooling ─────────────────────────────────────────────────────────
 brew "herdr"
 
-# ── misc CLI not packaged in nixpkgs ────────────────────────────────────────
+# ── networking ──────────────────────────────────────────────────────────────
+# CLI + tailscaled, not the App Store GUI build. `brew bundle` installs it but
+# does not start it: `sudo brew services start tailscale`.
+brew "tailscale"
+
+# ── misc CLI ────────────────────────────────────────────────────────────────
 brew "newrelic-cli"
 
 # ── fonts ─────────────────────────────────────────────────────────────────
