@@ -1,104 +1,112 @@
-# Bootstrapping Nix on a fresh work MacBook
+# Bootstrapping the work MacBook (Homebrew)
 
-Steps to go from a brand-new corp-provisioned Mac to a working `darwin-rebuild
-switch` against this flake. Written after redoing this on an M1 -> M5 hardware
-swap (2026-07-22), where the standard install path failed.
+Steps to go from a brand-new corp-provisioned Mac to a working toolchain.
+This host is managed by Homebrew, not Nix: `Brewfile` in this directory is the declared package set.
+The two personal hosts in this repo are still NixOS and are driven by `flake.nix`.
 
-## Why this isn't a plain `nix run nix-darwin -- switch`
+## Background: why this host isn't on Nix
 
-The standard/Determinate Nix installer mounts the Nix store on a dedicated
-APFS volume via `diskutil apfs addVolume` against the real physical
-container. On this machine, Kandji MDM + BeyondTrust EPM block that specific
-operation — `diskutil mount "Nix Store"` fails with `SUIS premount
-dissented` (a deprecated-but-still-enforced `SystemUIServer`
-"harddisk-internal" mount policy). This is a device/policy thing, not a Nix
-version or installer-choice thing — a previous M1 on this same flake had no
-such policy applied and used the standard mechanism fine.
+Nix needs `/nix` backed by a dedicated store.
+On this machine Kandji MDM plus BeyondTrust EPM block `diskutil apfs addVolume` against the physical container, so `diskutil mount "Nix Store"` fails with `SUIS premount dissented`, a deprecated but still enforced `SystemUIServer` "harddisk-internal" mount policy.
+The workaround was to back `/nix` with an `hdiutil` sparse image, which worked but left the store on a file-backed volume that had to be re-attached by a LaunchDaemon on every boot.
+That setup was retired on 2026-09-07 in favour of Homebrew.
+Nothing here depends on Nix any more.
 
-The fix: back `/nix` with a plain `hdiutil`-attached sparse disk image
-instead of a native volume/container operation. `hdiutil attach` on a
-file-backed image is a lower-privilege operation the same EPM policy doesn't
-cover.
-
-## 1. Create the synthetic mountpoint
+## 1. Xcode command line tools and Homebrew
 
 ```sh
-printf 'nix\n' | sudo tee /etc/synthetic.conf
-sudo /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
-ls -la /nix   # should now exist as an empty directory; reboot if it doesn't yet
+xcode-select --install
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-Must be a **bare** `nix` line (empty synthetic directory). A two-column
-`nix\t<target>` entry creates a symlink instead — current Nix hard-rejects a
-symlinked store path ("the path '/nix' is a symlink; this is not allowed").
-
-## 2. Create the disk image and LaunchDaemon
+Put Homebrew on `PATH` for the rest of this bootstrap (Apple silicon prefix):
 
 ```sh
-sudo hdiutil create -type SPARSE -size 128g -fs APFS -volname "Nix Store" /var/nix-store.sparseimage
-
-sudo tee /Library/LaunchDaemons/org.nixos.darwin-store.plist > /dev/null <<'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-        <key>Label</key>
-        <string>org.nixos.darwin-store</string>
-        <key>RunAtLoad</key>
-        <true/>
-        <key>KeepAlive</key>
-        <false/>
-        <key>ProgramArguments</key>
-        <array>
-                <string>/bin/sh</string>
-                <string>-c</string>
-                <string>/usr/bin/hdiutil attach -nobrowse -owners on -mountpoint /nix /var/nix-store.sparseimage</string>
-        </array>
-        <key>StandardErrorPath</key>
-        <string>/var/log/darwin-store.log</string>
-        <key>StandardOutPath</key>
-        <string>/var/log/darwin-store.log</string>
-</dict>
-</plist>
-EOF
-sudo chown root:wheel /Library/LaunchDaemons/org.nixos.darwin-store.plist
-sudo chmod 644 /Library/LaunchDaemons/org.nixos.darwin-store.plist
-sudo launchctl bootstrap system /Library/LaunchDaemons/org.nixos.darwin-store.plist
-
-mount | grep -i nix   # confirm disk5s1 (or similar) mounted at /nix
+eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 ```
 
-This LaunchDaemon re-attaches the image at `/nix` on every boot, same as the
-standard installer's daemon would for a real volume — just pointed at a file
-instead.
+Nothing needs appending to `~/.zprofile`: the tracked `zprofile` linked in step 3 already runs `brew shellenv`.
 
-## 3. Install Nix without letting it manage volumes or default build-user IDs
+## 2. Install the declared package set
 
 ```sh
-NIX_VOLUME_CREATE=0 NIX_BUILD_GROUP_ID=750 NIX_FIRST_BUILD_UID=751 \
-  sh <(curl -L https://nixos.org/nix/install) --daemon
+brew bundle --file ~/nix-config/hosts/work-macbook/Brewfile
 ```
 
-- `NIX_VOLUME_CREATE=0` — skip the installer's own volume creation; use the
-  `/nix` we already mounted in step 2.
-- `NIX_BUILD_GROUP_ID=750` / `NIX_FIRST_BUILD_UID=751` — the installer's
-  default (GID 350 / UID 351) collides with BeyondTrust's `_avectodaemon`
-  and `_defendpoint` on this machine. Must match `ids.gids.nixbld` /
-  `ids.uids.nixbld` in `darwin.nix`.
-
-Open a new terminal afterward so `nix` is on `PATH`.
-
-## 4. Bootstrap nix-darwin
-
-Flakes/nix-command aren't enabled in `nix.conf` until after the first
-switch, and `darwin-rebuild switch` needs root — but plain `sudo` resets
-`PATH` so it won't find `nix`. Preserve it explicitly:
+The `Brewfile` declares its own taps, so no manual `brew tap` is needed.
+Verify afterwards:
 
 ```sh
-sudo env "PATH=$PATH" nix --extra-experimental-features "nix-command flakes" \
-  run nix-darwin/nix-darwin-26.05#darwin-rebuild -- switch --flake ~/nix-config#work-macbook
+brew bundle check --file ~/nix-config/hosts/work-macbook/Brewfile
 ```
 
-After this succeeds once, plain `darwin-rebuild switch --flake
-~/nix-config#work-macbook` works for subsequent rebuilds (still needs
-`sudo`).
+## 3. Link the shared config files
+
+`home/files/` holds the config trees shared with the NixOS hosts.
+On this host they are plain symlinks, created by hand rather than by home-manager:
+
+```sh
+REPO=~/nix-config/home/files
+ln -sfn "$REPO/zsh/zshrc"      ~/.zshrc
+ln -sfn "$REPO/zsh/zshenv"     ~/.zshenv
+ln -sfn "$REPO/zsh/zprofile"   ~/.zprofile
+ln -sfn "$REPO/ghostty"        ~/.config/ghostty
+ln -sfn "$REPO/herdr"          ~/.config/herdr
+ln -sfn "$REPO/nvim"           ~/.config/nvim
+ln -sfn "$REPO/AGENTS.md"      ~/.claude/CLAUDE.md
+ln -sfn "$REPO/AGENTS.md"      ~/.codex/AGENTS.md
+ln -sfn "$REPO/AGENTS.md"      ~/.config/opencode/AGENTS.md
+ln -sfn "$REPO/aws/config"     ~/.aws/config
+```
+
+`~/.config/herdr` is a symlink on purpose: herdr writes onboarding and settings state back into its config, and those writes should land in this repo.
+AWS credentials and the SSO token cache stay local per machine and are never committed.
+
+## 4. Keg-only tools that need PATH entries
+
+Homebrew keeps `rustup`, `libpq` and `mysql-client` keg-only, so `cargo`, `psql` and `mysql` are not linked into `/opt/homebrew/bin`.
+Nix used to put them on `PATH` directly.
+The tracked `zsh/zshenv` handles this, so step 3 is what makes those three commands resolve:
+
+```sh
+export PATH="$HOME/go/bin:$HOME/.cargo/bin:/opt/homebrew/opt/rustup/bin:/opt/homebrew/opt/libpq/bin:/opt/homebrew/opt/mysql-client/bin:$PATH"
+```
+
+`$HOME/.cargo/bin` is for binaries produced by `cargo install`; the toolchain shims themselves come from the `rustup` keg.
+Initialise a toolchain once with `rustup default stable`.
+
+## 5. Tools not available through Homebrew
+
+```sh
+npm install -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claude-code
+```
+
+The postinstall script is gated by npm and has to be allowed explicitly.
+
+## Caps lock
+
+`home/files/launchagents/local.keyboard.capslock-to-escape.plist` remaps caps lock to escape, replacing nix-darwin's `system.keyboard.remapCapsLockToEscape`.
+`hidutil` mappings only last until reboot, so a LaunchAgent re-applies it at every login:
+
+```sh
+ln -sfn ~/nix-config/home/files/launchagents/local.keyboard.capslock-to-escape.plist \
+        ~/Library/LaunchAgents/local.keyboard.capslock-to-escape.plist
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/local.keyboard.capslock-to-escape.plist
+```
+
+Setting Modifier Keys in System Settings instead would also persist, but it is per-keyboard-device and not reproducible from this repo.
+
+## Shell configuration
+
+`~/.zshrc`, `~/.zshenv` and `~/.zprofile` live in `home/files/zsh/` and are symlinked into `$HOME` by step 3.
+Between them they carry the shell functions (`work`, `acu`, `tfe`, `coda`, the `ipa` alias), the history options, the `starship`/`direnv`/`fzf`/`zoxide` hooks, the two zsh plugin `source` lines, `DOCKER_HOST` for colima, and the keg-only `PATH` from step 4.
+They replace what `programs.zsh` in `home/common.nix` generates on the NixOS hosts, which is why that module is not used here.
+
+These are live symlinks, so anything that appends to `~/.zprofile` or `~/.zshrc`, such as an installer script or the JetBrains Toolbox app, writes into this repo and shows up as a diff.
+That is deliberate, the same arrangement as `~/.config/herdr`.
+
+## Not managed here
+
+IT and MDM own these, and Homebrew must never be pointed at them:
+BeyondTrust, Cisco, CrowdStrike Falcon, GlobalProtect, Okta Verify, Iru Self Service, PrivilegeManagement, SquareX, uniFLOW SmartClient, Microsoft Office / Teams / Outlook, OneDrive, the Google Workspace wrappers, and Zoom.
+Xcode comes from the App Store.

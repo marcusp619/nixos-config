@@ -1,12 +1,14 @@
 # Machine Inventory — Work MacBook (2026-07-07)
 
-Source of truth for the Nix flake + home-manager migration. Mark items:
-`[k]` keep · `[d]` drop · `[?]` unsure. Items already marked are my recommendations —
-change anything you disagree with.
+Pre-migration audit of the machine, kept as the rationale behind the package set in
+`Brewfile`. Mark items: `[k]` keep · `[d]` drop · `[?]` unsure.
+
+The `[k]`/`[d]` calls here were made for the Nix migration and carried over unchanged
+when this host moved to Homebrew on 2026-09-07.
 
 Only **top-level** tools are listed. The ~150 other brew formulae (libpng, openssl,
-icu4c, …) are dependencies; Nix resolves those automatically and they should NOT be
-declared.
+icu4c, …) are dependencies; Homebrew resolves those automatically and they should NOT
+be declared in `Brewfile`.
 
 ---
 
@@ -105,7 +107,7 @@ Configs exist for: ghostty (active, configured), warp (cask), iterm2, kitty, wez
 - [k] **Ghostty** — recommended: it's the one with a real config, pairs well with herdr
 - [d] Warp, and delete stale iterm2/kitty/wezterm configs
 
-## 7. GUI apps (nix-darwin `homebrew.casks` or nixpkgs where available)
+## 7. GUI apps (Homebrew casks)
 
 ### Keep
 
