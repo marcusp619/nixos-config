@@ -1,0 +1,119 @@
+# Homebrew replacement for the nix/nix-darwin setup on work-macbook.
+# Generated from home/common.nix, home/work-apps.nix, hosts/work-macbook/darwin.nix.
+# Install with: brew bundle --file hosts/work-macbook/Brewfile
+
+tap "hashicorp/tap"    # terraform (pulled from homebrew-core after license change)
+tap "zennotes/tap"     # zennotes cask has no aarch64-darwin nixpkgs build
+
+# ── core CLI ──────────────────────────────────────────────────────────────
+brew "ripgrep"
+brew "fd"
+brew "fzf"
+brew "zoxide"
+brew "eza"
+brew "bat"
+brew "jq"
+brew "yq"
+brew "tree"
+brew "btop"
+brew "ncdu"
+brew "tmux"
+brew "wget"
+brew "just"
+
+# ── git ───────────────────────────────────────────────────────────────────
+brew "gh"
+brew "lazygit"
+brew "git-delta"
+brew "git-filter-repo"
+
+# ── shell ─────────────────────────────────────────────────────────────────
+brew "starship"
+brew "direnv"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
+
+# ── editor ────────────────────────────────────────────────────────────────
+brew "neovim"
+brew "lua-language-server"
+
+# ── containers ────────────────────────────────────────────────────────────
+brew "colima"
+brew "lima"
+brew "docker"
+brew "docker-buildx"
+brew "docker-compose"
+brew "qemu"
+brew "mkcert"
+brew "hey"
+
+# ── aws ───────────────────────────────────────────────────────────────────
+brew "awscli"
+cask "session-manager-plugin"
+brew "aws-vault"
+brew "chamber"
+brew "aws-sam-cli"
+
+# ── terraform ─────────────────────────────────────────────────────────────
+brew "hashicorp/tap/terraform"
+
+# ── node ──────────────────────────────────────────────────────────────────
+brew "node@24"
+brew "pnpm"
+brew "typescript"
+brew "typescript-language-server"
+brew "vscode-langservers-extracted"
+
+# ── go ────────────────────────────────────────────────────────────────────
+brew "go"
+brew "gopls"
+brew "goimports"
+brew "go-air"     # air-verse/air live-reload tool; plain "air" formula is an R formatter
+brew "golang-migrate"
+brew "golangci-lint"
+brew "sqlc"
+
+# ── rust (rustup manages toolchains, same as before) ────────────────────────
+brew "rustup"
+brew "cargo-watch"
+brew "cargo-expand"
+brew "sqlx-cli"
+brew "taplo"
+
+# ── python ────────────────────────────────────────────────────────────────
+brew "python@3.13"
+
+# ── db clients (servers run in containers) ──────────────────────────────────
+brew "mysql-client"
+brew "libpq"
+brew "redis"
+
+# ── ai agent tooling ─────────────────────────────────────────────────────────
+brew "herdr"
+
+# ── misc CLI not packaged in nixpkgs ────────────────────────────────────────
+brew "newrelic-cli"
+
+# ── fonts ─────────────────────────────────────────────────────────────────
+cask "font-jetbrains-mono-nerd-font"
+
+# ── GUI apps ──────────────────────────────────────────────────────────────
+# NOT listed (IT/MDM owns them — never manage): BeyondTrust, Cisco, CrowdStrike
+# Falcon, GlobalProtect, Okta Verify, Iru, PrivilegeManagement, SquareX,
+# uniFLOW, Microsoft Office/Teams/Outlook, OneDrive, Google Workspace apps.
+cask "ghostty"
+cask "obsidian"
+cask "zennotes"
+cask "slack"
+cask "cursor"
+cask "datagrip"
+cask "figma"
+cask "firefox"
+cask "google-chrome"
+cask "zen"
+cask "keeper-password-manager"
+cask "rectangle"
+
+# ── not available via Homebrew — install manually after `brew bundle` ──────
+# claude-code: npm install -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claude-code
+#              (needs node, installed above; postinstall script is gated by npm and must be allowed explicitly)

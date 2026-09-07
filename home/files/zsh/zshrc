@@ -1,0 +1,76 @@
+autoload -U compinit && compinit
+
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+ZSH_AUTOSUGGEST_STRATEGY=(history)
+
+eval "$(zoxide init zsh)"
+
+HISTSIZE="10000"
+SAVEHIST="10000"
+HISTFILE="$HOME/.zsh_history"
+
+if [[ $options[zle] = on ]]; then
+  source <(fzf --zsh)
+fi
+
+set_opts=(
+  HIST_FCNTL_LOCK HIST_IGNORE_DUPS HIST_IGNORE_SPACE SHARE_HISTORY
+  NO_APPEND_HISTORY NO_EXTENDED_HISTORY NO_HIST_EXPIRE_DUPS_FIRST
+  NO_HIST_FIND_NO_DUPS NO_HIST_IGNORE_ALL_DUPS NO_HIST_SAVE_NO_DUPS
+)
+for opt in "${set_opts[@]}"; do
+  setopt "$opt"
+done
+unset opt set_opts
+
+setopt AUTO_CD
+setopt INTERACTIVE_COMMENTS
+
+# Shared helper — fuzzy-pick a subdir and cd into it (requires fzf)
+_pick_dir() {
+  local search_path="$1"
+  local selected
+  selected=$(find "$search_path" -mindepth 1 -maxdepth 1 -type d | xargs -I{} basename {} | fzf)
+  [[ -n "$selected" ]] && cd "$search_path/$selected"
+}
+
+work() { _pick_dir "$HOME/Documents/insurance-workspace"; }
+acu()  { _pick_dir "$HOME/Documents/acu-workspace"; }
+
+alias ipa='cd $HOME/Documents/insurance-workspace/insurance-partner-api/'
+
+# tfe — filter insurance-workspace TFE repos by name, then pick one
+tfe() {
+  local folders=("$HOME/Documents/insurance-workspace/tfe_rv-insurance" "$HOME/Documents/insurance-workspace/tfe_rv-coverage")
+  local options=() counter=1
+  for folder in "${folders[@]}"; do
+    if [[ "$folder" == *"$1"* ]]; then
+      echo "$counter. $folder"; options[$counter]=$folder; ((counter++))
+    fi
+  done
+  if [[ $counter -eq 1 ]]; then echo "No matching folders found"; return 1; fi
+  echo -n "Enter selection: "; read choice
+  if [[ $choice -gt 0 && $choice -lt $counter ]]; then
+    cd "${options[$choice]}"
+  else
+    echo "Invalid selection"; return 1
+  fi
+}
+
+# AWS — login and start the Comcast proxy tunnel in one shot
+coda() {
+  aws sso login --profile sso-coda-nonprod && \
+  aws ssm start-session --profile sso-coda-nonprod \
+    --target i-034e9c036b6244ffd \
+    --document-name AWS-StartPortForwardingSessionToRemoteHost \
+    --parameters '{"host":["proxyweb-int.comcast.com"],"portNumber":["443"],"localPortNumber":["4443"]}'
+}
+
+if [[ $TERM != "dumb" ]]; then
+  eval "$(starship init zsh)"
+fi
+
+eval "$(direnv hook zsh)"
+
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main)

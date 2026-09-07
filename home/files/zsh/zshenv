@@ -1,0 +1,4 @@
+export DOCKER_HOST="unix://$HOME/.colima/docker.sock"
+
+# rustup, libpq and mysql-client are keg-only in Homebrew; nix put these on PATH
+export PATH="$HOME/go/bin:$HOME/.cargo/bin:/opt/homebrew/opt/rustup/bin:/opt/homebrew/opt/libpq/bin:/opt/homebrew/opt/mysql-client/bin:$PATH"
