@@ -5,6 +5,6 @@
   lib.meta = {
     createSymlink = path:
       config.lib.file.mkOutOfStoreSymlink
-        "${config.home.homeDirectory}/nix-config/${path}";
+        "${config.home.homeDirectory}/nixos-config/${path}";
   };
 }

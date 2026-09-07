@@ -14,6 +14,9 @@
     # nix authoring
     nixd alejandra just
 
+    # node — nodejs_latest tracks whatever nixpkgs currently considers newest
+    nodejs_latest
+
     # editor
     neovim
 
@@ -21,6 +24,21 @@
     # binary cache claude-code.cachix.org is configured per-host)
     inputs.claude-code.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default
+
+    # homelab CLIs
+    kubectl
+    k9s
+    kubernetes-helm
+    argocd
+    sops
+    age
+    velero
+    minio-client
+    cloudflared
+  ] ++ lib.optionals pkgs.stdenv.isLinux [
+    # Claude desktop app — not in nixpkgs; community flake.
+    # macOS gets it via Homebrew cask on work-macbook.
+    inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop
   ];
 
   # ── symlink live config dirs out of the store ────────────────────────────
@@ -54,6 +72,10 @@
     settings.user.email = "marcusp619@gmail.com";
     settings.pull.ff = "only";
     settings.init.defaultBranch = "main";
+    settings.credential."https://github.com".helper =
+      "!${pkgs.gh}/bin/gh auth git-credential";
+    settings.credential."https://gist.github.com".helper =
+      "!${pkgs.gh}/bin/gh auth git-credential";
   };
 
   programs.delta = {
