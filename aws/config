@@ -197,6 +197,39 @@ sso_role_name = PowerUser
 region = us-east-1
 output = json
 
+[profile sso-chord-nonprod]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 654654375897
+sso_role_name = Developer  
+region = us-east-1
+output = json
+
+[profile sso-chord-prod]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 058264551363
+sso_role_name = Developer
+region = us-east-1
+output = json
+
+[profile sso-allconnect-utility-nonprod]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 777470159201
+sso_role_name = Developer  
+region = us-east-1
+output = json
+
+[profile sso-allconnect-utility-prod]
+sso_start_url = https://d-9067657002.awsapps.com/start#/
+sso_region = us-east-1
+sso_account_id = 189849168476
+sso_role_name = Developer
+region = us-east-1
+output = json
+
+
 [sso-session insurance]
 sso_start_url = https://rv.awsapps.com/start/
 sso_region = us-east-1
@@ -208,4 +241,12 @@ sso_region = us-east-1
 sso_account_id = 418272776050
 sso_role_name = RedPlatformRun2024Eks
 region = us-east-1
+output = json
+
+[profile chord-dev]
+sso_start_url = https://rv.awsapps.com/start/
+sso_region = us-east-1
+sso_account_id = 654654375897
+sso_role_name = ReadOnly
+region = us-east-2
 output = json

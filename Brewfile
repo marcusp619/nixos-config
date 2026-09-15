@@ -1,9 +1,8 @@
-# Homebrew replacement for the nix/nix-darwin setup on work-macbook.
-# Generated from home/common.nix, home/work-apps.nix, hosts/work-macbook/darwin.nix.
-# Install with: brew bundle --file hosts/work-macbook/Brewfile
+# Declared package set for this machine.
+# Install with: brew bundle --file ~/dotfiles/Brewfile
 
 tap "hashicorp/tap"    # terraform (pulled from homebrew-core after license change)
-tap "zennotes/tap"     # zennotes cask has no aarch64-darwin nixpkgs build
+tap "zennotes/tap"     # zennotes cask is not in homebrew-core
 
 # ── core CLI ──────────────────────────────────────────────────────────────
 brew "ripgrep"

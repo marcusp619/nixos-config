@@ -1,16 +1,7 @@
-# Bootstrapping the work MacBook (Homebrew)
+# Bootstrapping this MacBook
 
 Steps to go from a brand-new corp-provisioned Mac to a working toolchain.
-This host is managed by Homebrew, not Nix: `Brewfile` in this directory is the declared package set.
-The two personal hosts in this repo are still NixOS and are driven by `flake.nix`.
-
-## Background: why this host isn't on Nix
-
-Nix needs `/nix` backed by a dedicated store.
-On this machine Kandji MDM plus BeyondTrust EPM block `diskutil apfs addVolume` against the physical container, so `diskutil mount "Nix Store"` fails with `SUIS premount dissented`, a deprecated but still enforced `SystemUIServer` "harddisk-internal" mount policy.
-The workaround was to back `/nix` with an `hdiutil` sparse image, which worked but left the store on a file-backed volume that had to be re-attached by a LaunchDaemon on every boot.
-That setup was retired on 2026-09-07 in favour of Homebrew.
-Nothing here depends on Nix any more.
+Everything is managed by Homebrew: `Brewfile` is the declared package set, and the config trees in this repo are symlinked into `$HOME`.
 
 ## 1. Xcode command line tools and Homebrew
 
@@ -30,23 +21,22 @@ Nothing needs appending to `~/.zprofile`: the tracked `zprofile` linked in step 
 ## 2. Install the declared package set
 
 ```sh
-brew bundle --file ~/nix-config/hosts/work-macbook/Brewfile
+brew bundle --file ~/dotfiles/Brewfile
 ```
 
 The `Brewfile` declares its own taps, so no manual `brew tap` is needed.
 Verify afterwards:
 
 ```sh
-brew bundle check --file ~/nix-config/hosts/work-macbook/Brewfile
+brew bundle check --file ~/dotfiles/Brewfile
 ```
 
-## 3. Link the shared config files
+## 3. Link the config files
 
-`home/files/` holds the config trees shared with the NixOS hosts.
-On this host they are plain symlinks, created by hand rather than by home-manager:
+The config trees at the top level of this repo are symlinked into `$HOME`:
 
 ```sh
-REPO=~/nix-config/home/files
+REPO=~/dotfiles
 ln -sfn "$REPO/zsh/zshrc"      ~/.zshrc
 ln -sfn "$REPO/zsh/zshenv"     ~/.zshenv
 ln -sfn "$REPO/zsh/zprofile"   ~/.zprofile
@@ -65,7 +55,6 @@ AWS credentials and the SSO token cache stay local per machine and are never com
 ## 4. Keg-only tools that need PATH entries
 
 Homebrew keeps `rustup`, `libpq` and `mysql-client` keg-only, so `cargo`, `psql` and `mysql` are not linked into `/opt/homebrew/bin`.
-Nix used to put them on `PATH` directly.
 The tracked `zsh/zshenv` handles this, so step 3 is what makes those three commands resolve:
 
 ```sh
@@ -83,13 +72,26 @@ npm install -g --allow-scripts=@anthropic-ai/claude-code @anthropic-ai/claude-co
 
 The postinstall script is gated by npm and has to be allowed explicitly.
 
+## 6. Full Disk Access for herdr
+
+The herdr server is a daemon that outlives the terminal which started it, so it cannot rely on inheriting Ghostty's file access grant.
+Without a grant of its own, every shell herdr spawns is denied access to `~/Documents`, `getcwd` fails with `Operation not permitted`, and agents started in a pane cannot read their own working directory.
+Add the binary under System Settings > Privacy & Security > Full Disk Access, using the resolved path:
+
+```sh
+readlink -f "$(command -v herdr)"
+```
+
+Restart the server afterwards with `herdr server stop`.
+herdr is ad-hoc signed with no Team ID, so the grant is keyed to that versioned Cellar path rather than to a code signature, and it has to be re-added after every `brew upgrade herdr`.
+
 ## Caps lock
 
-`home/files/launchagents/local.keyboard.capslock-to-escape.plist` remaps caps lock to escape, replacing nix-darwin's `system.keyboard.remapCapsLockToEscape`.
+`launchagents/local.keyboard.capslock-to-escape.plist` remaps caps lock to escape.
 `hidutil` mappings only last until reboot, so a LaunchAgent re-applies it at every login:
 
 ```sh
-ln -sfn ~/nix-config/home/files/launchagents/local.keyboard.capslock-to-escape.plist \
+ln -sfn ~/dotfiles/launchagents/local.keyboard.capslock-to-escape.plist \
         ~/Library/LaunchAgents/local.keyboard.capslock-to-escape.plist
 launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/local.keyboard.capslock-to-escape.plist
 ```
@@ -98,9 +100,8 @@ Setting Modifier Keys in System Settings instead would also persist, but it is p
 
 ## Shell configuration
 
-`~/.zshrc`, `~/.zshenv` and `~/.zprofile` live in `home/files/zsh/` and are symlinked into `$HOME` by step 3.
+`~/.zshrc`, `~/.zshenv` and `~/.zprofile` live in `zsh/` and are symlinked into `$HOME` by step 3.
 Between them they carry the shell functions (`work`, `acu`, `tfe`, `coda`, the `ipa` alias), the history options, the `starship`/`direnv`/`fzf`/`zoxide` hooks, the two zsh plugin `source` lines, `DOCKER_HOST` for colima, and the keg-only `PATH` from step 4.
-They replace what `programs.zsh` in `home/common.nix` generates on the NixOS hosts, which is why that module is not used here.
 
 These are live symlinks, so anything that appends to `~/.zprofile` or `~/.zshrc`, such as an installer script or the JetBrains Toolbox app, writes into this repo and shows up as a diff.
 That is deliberate, the same arrangement as `~/.config/herdr`.

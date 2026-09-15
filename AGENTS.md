@@ -75,4 +75,4 @@
 
 Anbeeld's global rules (vendored from github.com/Anbeeld/AGENTS.md, see AGENTS-anbeeld.md):
 
-@~/nix-config/home/files/AGENTS-anbeeld.md
+@~/dotfiles/AGENTS-anbeeld.md
