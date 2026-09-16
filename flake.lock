@@ -6,11 +6,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1789434921,
-        "narHash": "sha256-ppvKlpoPL41TrSC3UjpvrHT8zcjnokLqacHMLeq356U=",
+        "lastModified": 1789506088,
+        "narHash": "sha256-BTpzemdCBYhjBXsl6EirYaWUFxRkCW8JmgAMelDDg6U=",
         "owner": "sadjow",
         "repo": "claude-code-nix",
-        "rev": "21f45473c72a5c902fc7a6156cd0195a656a2e9e",
+        "rev": "f5783590a83ea9e2e9c710dc839abf13f59aec37",
         "type": "github"
       },
       "original": {
@@ -78,11 +78,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1789435259,
-        "narHash": "sha256-S9zjcDVbtnE6iLJLS3U/VLxuZA1WyK673bfAFPnrffU=",
+        "lastModified": 1789509503,
+        "narHash": "sha256-EI/d7PwQjXGlObZFN54pKY/Mm9dGHGLWHufi+vw99pE=",
         "owner": "ogulcancelik",
         "repo": "herdr",
-        "rev": "052779c4159ed851ae78ed1271130811986d1166",
+        "rev": "18061191fdc019498610aee81f0df93f6c2ebd31",
         "type": "github"
       },
       "original": {
@@ -315,11 +315,11 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1789429059,
-        "narHash": "sha256-xe+5+BzAAOqoRy3G/a4w1yl9YMf8KIpdH2dfMFU7cOs=",
+        "lastModified": 1789518102,
+        "narHash": "sha256-NLGfu7aYdqqPhBxdPrx/wbSpn5EsK0lw6s0M2P6o7bU=",
         "owner": "ZenNotes",
         "repo": "zennotes",
-        "rev": "59cb66e33548bfd879242307a27797833d19df1d",
+        "rev": "9a2e5e1a87f5e095692f0084a66ca012cfafe011",
         "type": "github"
       },
       "original": {
