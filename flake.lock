@@ -315,11 +315,11 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1793738012,
-        "narHash": "sha256-qsqKdXy1K8GVuAGZV/Vs5s+OfVyQrOmF4oOgcSb7ZLY=",
+        "lastModified": 1793917222,
+        "narHash": "sha256-7WDqGh25vymdCTa6MnjFhViDEpJ1VOvVEjvWF6P4jtM=",
         "owner": "ZenNotes",
         "repo": "zennotes",
-        "rev": "c05a8650fe6363be10b694c8fa7f138016cbd642",
+        "rev": "85cddae1a4ef44b93846f3adee2eeb85a6f7b685",
         "type": "github"
       },
       "original": {
